@@ -37,8 +37,10 @@
         <p>Pellentesque habitant</p>
     </article>
 
+    <article id="test-control">
+    </article>
+
     <article id="test">
-        123123    
     </article>
 
 </section>
@@ -58,11 +60,12 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="js-text-xover.js"></script>
 <script type="text/javascript" charset="utf-8">
-    $('#test').xover('123125');
-    $('#test').xover('1231202');
-    $('#test').xover('123120s');
-    $('#test').xover('1231201');
-    $('#test').xover('1231209');
+    var val = Math.floor((Math.random()*100000)+1); 
+    $('#test').text(val);
+    setInterval(function() {
+        $('#test').xover(++val); 
+        $('#test-control').text(val);
+    }, 1000);
 </script>
 </body>
 </html>
