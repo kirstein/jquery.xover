@@ -28,8 +28,6 @@
         var firstChange = this.getFirstChangePos(),
             $el, $appendElement, i;
 
-        $appendElement = this.$el.children('span:not(.'+ this.options.elChangeClass + '):nth-child('+ firstChange +')');
-
         for (i = firstChange; i < this.value.length; i += 1) {
             $el = $('<span/>', {
                 'class' : this.options.elClass + ' ' + this.options.elChangeClass,
@@ -37,21 +35,14 @@
                 'style' : 'display:none'
             });
             
-            if ($appendElement.length) {
-                $el.insertAfter($appendElement);
-            } else {
-                this.$el.empty();
-                $el.prependTo(this.$el);
-            }
-
-            $appendElement = $el;
+            $el.appendTo(this.$el);
         }                
     };
 
     Xover.prototype.manipulateEl = function() {
         var root        = this,
             firstChange = this.getFirstChangePos(),
-            changeElems;
+            $changeEls;
 
         // Animate temporary elements and change them to main ones.
         // Remove old main elements.
@@ -61,8 +52,10 @@
         }
 
         function animateNewElements() {
-            root.$el.children('span.' + root.options.elChangeClass).fadeIn(root.options.speed, function() {
-                $(this).toggleClass(root.options.elChangeClass).toggleClass(root.options.elClass);
+            root.$el.children('span.' + root.options.elChangeClass)
+                .fadeIn(root.options.speed, function() {
+                    $(this).toggleClass(root.options.elChangeClass)
+                           .toggleClass(root.options.elClass);
             }); 
         }
 
@@ -70,20 +63,20 @@
             
             // List all elements that come after changed element.
             // Animate main elements.
+            $changeEls = this.$el.children('span.' + this.options.elClass)
+                             .filter(':nth-child(' + firstChange + ')')
+                             .nextAll();
 
-            changeElems = this.$el.children('span.' + this.options.elClass + ':nth-child(' + firstChange + ')')
-                              .nextAll().filter(':not(.' + this.options.elChangeClass + ')');
-
-            if (changeElems.length) {
-                changeElems.fadeOut(this.options.speed, toggleClassesAndRem);
-            } else {
-                animateNewElements();
+            // If no elements were found get all spans with elClass class.
+            if (!$changeEls.length) {
+                $changeEls = this.$el.children('span.' + this.options.elClass);
             }
+            
+            // Animate only spans without elChangeClass class.
+            $changeEls.filter(':not(.' + this.options.elChangeClass + ')')
+                      .fadeOut(this.options.speed, toggleClassesAndRem);
 
-        } else {
-            // Debug
-            console.error(this);
-        }
+        } 
     };
 
     /**
@@ -107,9 +100,9 @@
                 'text'  : text[i]
             });
         }
-
         this.$el.html($el);
     };
+
     $.fn.xover = function(value, options) {
         var root = this;
 
