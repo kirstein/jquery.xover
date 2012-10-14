@@ -54,12 +54,12 @@
             
             // Animate only spans without elChangeClass class.
             $transisionEls = $changeEls.filter(':not(.' + this.options.elChangeClass + ')')
-                      .addClass(this.options.elTransision)
-                      .animate({ 'top' : this.options.offset,
-                                 'opacity' : '0' 
-                               }, this.options.speed, function() {
-                          $(this).remove(); 
-                      });
+                      //.addClass(this.options.elTransision)
+                      //.animate({ 'top' : this.options.offset,
+                                 //'opacity' : '0' 
+                               //}, this.options.speed, function() {
+                          //$(this).remove(); 
+                      //});
 
             leftOffset = '-' + $transisionEls.length * $($transisionEls[0]).width() + 'px';
 
@@ -68,11 +68,11 @@
                 .css({ left: leftOffset, 
                        top: '-' + this.options.offset
                 }).show()
-                .animate({ 'top' : '0' }, this.options.speed, function() {
-                    $(this).removeClass(root.options.elChangeClass)
-                           .removeClass(root.options.elTransision)
-                           .css({ left : 0 });
-                    }); 
+                //.animate({ 'top' : '0' }, this.options.speed, function() {
+                    //$(this).removeClass(root.options.elChangeClass)
+                           //.removeClass(root.options.elTransision)
+                           //.css({ left : 0 });
+                    //}); 
         } 
     };
 
@@ -84,6 +84,9 @@
              if (this.text.length < i || this.value[i] !== this.text[i]) {
                 return i;
              }
+         }
+         if (this.value.length < this.text.length) {
+            return this.value.length;
          }
     };
 
