@@ -35,14 +35,13 @@
 
 <h3>Working example</h3>
 
+<p>Example <div id="simple"></div>timestamp change</p> 
 <pre><code> 
     var interval;
     interval = setInterval(function() {
         $('#test').xover(new Date().getTime());
     }, 1000);
-
 </code></pre>
-<p id="simple"></p>
 
 <h3>Rather Drive Stick?</h3>
 
@@ -61,8 +60,14 @@
         <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
       </footer>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
-   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script> 
-   <script src="https://raw.github.com/kirstein/js-text-xover/master/js-text-xover.js"></script>
+   <script src="javascripts/scale.fix.js"></script>
+   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script> 
+   <script type="text/javascript" src="https://raw.github.com/kirstein/js-text-xover/master/js-text-xover.js"></script> 
+   <script>
+       var interval;
+        interval = setInterval(function() {
+        $('#simple').xover(new Date().getTime());
+    }, 1000);
+   </script>
   </body>
 </html>
