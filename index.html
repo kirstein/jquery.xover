@@ -36,11 +36,14 @@
         </header>
         <p>Pellentesque habitant</p>
     </article>
-
+    
     <article id="test-control">
+        112
     </article>
 
     <article id="test">
+        <span class="xover-el" style="top: 0px; ">1</span>
+        <span class="xover-transision">3</span>
     </article>
 
 </section>
@@ -55,16 +58,29 @@
 </footer>
 <!--! end of struture -->
 
-
+<style type="text/css">
+    .xover-transision {
+        position: absolute;
+    }
+    .xover-el {
+        position:relative; 
+    }
+</style>
 <!-- JavaScript at the bottom for fast page loading -->
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="js-text-xover.js"></script>
 <script type="text/javascript" charset="utf-8">
-  var val = Math.floor((Math.random()*1000)+1); 
-  $('#test').text(val);
-  setInterval(function() {
-      $('#test').xover(++val); 
-  }, 1000);
+var val = Math.floor((Math.random()*1000)+1); 
+$('#test').text(val);
+var a = setInterval(function() {
+    $('#test').xover(++val); 
+}, 1000);
+
+  var a = setInterval(function() {
+    $('#test-control').xover(++val); 
+}, 1000);
+
+
 </script>
 </body>
 </html>

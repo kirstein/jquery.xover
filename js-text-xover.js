@@ -9,12 +9,7 @@
             this.options = options;
             this.value   = $.trim(value);
             this.text    = $.trim(this.$el.text());
-            this.change  = {
-                'curr': null,
-                'prev': null,
-                'diff': null
-            };
-        };
+    };
 
     Xover.prototype.init = function() {
         if (this.text !== this.value) {
@@ -42,22 +37,7 @@
     Xover.prototype.manipulateEl = function() {
         var root        = this,
             firstChange = this.getFirstChangePos(),
-            $changeEls;
-
-        // Animate temporary elements and change them to main ones.
-        // Remove old main elements.
-        function toggleClassesAndRem() {
-            $(this).remove();
-            animateNewElements();
-        }
-
-        function animateNewElements() {
-            root.$el.children('span.' + root.options.elChangeClass)
-                .fadeIn(root.options.speed, function() {
-                    $(this).toggleClass(root.options.elChangeClass)
-                           .toggleClass(root.options.elClass);
-            }); 
-        }
+            $changeEls, $transisionEls, leftOffset;
 
         if (typeof firstChange !== 'undefined') {
             
@@ -73,9 +53,26 @@
             }
             
             // Animate only spans without elChangeClass class.
-            $changeEls.filter(':not(.' + this.options.elChangeClass + ')')
-                      .fadeOut(this.options.speed, toggleClassesAndRem);
+            $transisionEls = $changeEls.filter(':not(.' + this.options.elChangeClass + ')')
+                      .addClass(this.options.elTransision)
+                      .animate({ 'top' : this.options.offset,
+                                 'opacity' : '0' 
+                               }, this.options.speed, function() {
+                          $(this).remove(); 
+                      });
 
+            leftOffset = '-' + $transisionEls.length * $($transisionEls[0]).width() + 'px';
+
+            this.$el.children('span.' + root.options.elChangeClass)
+                .addClass(this.options.elTransision)
+                .css({ left: leftOffset, 
+                       top: '-' + this.options.offset
+                }).show()
+                .animate({ 'top' : '0' }, this.options.speed, function() {
+                    $(this).removeClass(root.options.elChangeClass)
+                           .removeClass(root.options.elTransision)
+                           .css({ left : 0 });
+                    }); 
         } 
     };
 
@@ -118,10 +115,10 @@
 
     $.fn.xover.options = {
         value    : undefined,
-        change   : function() {},
         elClass  : 'xover-el',
         elChangeClass : 'xover-change',
-        emptyVal : '&nbsp;',
-        speed    : 'slow'
+        elTransision : 'xover-transision',
+        speed    : 'fast',
+        offset   : '10px'
     };
 })(jQuery);
