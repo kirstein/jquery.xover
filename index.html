@@ -31,11 +31,18 @@
         <h3>Jquery test crossover plugin</h3> 
 <p>Plugin meant to crossover between values. Usage example:</p>
 
-<pre><code>$('#div').xover('123')</code></pre>
+<pre><code>$('#simple').xover('123')</code></pre>
 
-<h3>Designer Templates</h3>
+<h3>Working example</h3>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<pre><code> 
+    var interval;
+    interval = setInterval(function() {
+        $('#test').xover(new Date().getTime());
+    }, 1000);
+
+</code></pre>
+<p id="simple"></p>
 
 <h3>Rather Drive Stick?</h3>
 
@@ -55,6 +62,7 @@
       </footer>
     </div>
     <script src="javascripts/scale.fix.js"></script>
-    
+   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script> 
+   <script src="https://raw.github.com/kirstein/js-text-xover/master/js-text-xover.js"></script>
   </body>
 </html>
