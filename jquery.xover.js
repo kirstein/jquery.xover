@@ -65,13 +65,13 @@
 
             this.$el.children('span.' + root.options.elChangeClass)
                 .addClass(this.options.elTransision)
-                .css({ left: leftOffset, 
-                       top: '-' + this.options.offset
+                .css({ 'margin-left': leftOffset, 
+                       'margin-top': '-' + this.options.offset
                 }).show()
-                .animate({ 'top' : '0' }, this.options.speed, function() {
+                .animate({ 'margin-top' : 0 }, this.options.speed, function() {
                     $(this).removeClass(root.options.elChangeClass)
                            .removeClass(root.options.elTransision)
-                           .css({ left : 0 });
+                           .css({ 'margin-left' : 0 });
                     }); 
         } 
     };
