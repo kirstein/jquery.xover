@@ -118,7 +118,7 @@
         elClass  : 'xover-el',
         elChangeClass : 'xover-change',
         elTransision : 'xover-transision',
-        speed    : 'fast',
+        speed    : 'slow',
         offset   : '10px'
     };
 })(jQuery);
