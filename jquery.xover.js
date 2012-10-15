@@ -21,16 +21,16 @@
 
     Xover.prototype.writeTransformEl = function() {
         var firstChange = this.getFirstChangePos(),
-            $el, $appendElement, i;
+            $wrap = $('<span />', {
+                'class' : this.options.elTransision
+            }), i;
 
+        this.$el.append($wrap);
         for (i = firstChange; i < this.value.length; i += 1) {
-            $el = $('<span/>', {
-                'class' : this.options.elClass + ' ' + this.options.elChangeClass,
-                'text'  : this.value[i],
-                'style' : 'display:none'
-            });
-            
-            $el.appendTo(this.$el);
+            $('<span/>', {
+                'class' : this.options.elClass,
+                'text'  : this.value[i]
+            }).appendTo($wrap);
         }                
     };
 
@@ -40,40 +40,52 @@
             $changeEls, $transisionEls, leftOffset;
 
         if (typeof firstChange !== 'undefined') {
+
+            this.animateOldItems();
+            this.animateNewItems();
             
-            // List all elements that come after changed element.
-            // Animate main elements.
-            $changeEls = this.$el.children('span.' + this.options.elClass)
-                             .filter(':nth-child(' + firstChange + ')')
-                             .nextAll();
-
-            // If no elements were found get all spans with elClass class.
-            if (!$changeEls.length) {
-                $changeEls = this.$el.children('span.' + this.options.elClass);
-            }
-            
-            // Animate only spans without elChangeClass class.
-            $transisionEls = $changeEls.filter(':not(.' + this.options.elChangeClass + ')')
-                      .addClass(this.options.elTransision)
-                      .animate({ 'top' : this.options.offset,
-                                 'opacity' : '0' 
-                               }, this.options.speed, function() {
-                          $(this).remove(); 
-                      });
-
-            leftOffset = '-' + $transisionEls.length * $($transisionEls[0]).width() + 'px';
-
-            this.$el.children('span.' + root.options.elChangeClass)
-                .addClass(this.options.elTransision)
-                .css({ 'margin-left': leftOffset, 
-                       'margin-top': '-' + this.options.offset
-                }).show()
-                .animate({ 'margin-top' : 0 }, this.options.speed, function() {
-                    $(this).removeClass(root.options.elChangeClass)
-                           .removeClass(root.options.elTransision)
-                           .css({ 'margin-left' : 0 });
-                    }); 
         } 
+    };
+
+    Xover.prototype.animateNewItems = function() {
+        var firstChange = this.getFirstChangePos(),
+            leftOffset  = '-' + (this.text.length - firstChange) * this._elWidth + 'px',
+            root        = this,
+            cssValues, animateValues;
+
+        animateValues = { 'margin-top' : 0 };
+        cssValues = { 'margin-left': leftOffset, 
+                      'margin-top' : '-' + this.options.offset,
+                      'display'    : 'visible'    
+                    };
+
+        function afterAnimate() {
+            $(this).removeClass(root.options.elTransision)
+                   .css({ 'margin-left' : 0 })
+                   .children().unwrap();
+        }
+        this.$el.children('span.' + this.options.elTransision).css(cssValues).animate(animateValues, this.options.speed, afterAnimate); 
+    };
+
+    Xover.prototype.animateOldItems = function() {
+        var firstChange = this.getFirstChangePos(),
+            $elToChange = this.$el.children('span.' + this.options.elClass),
+            animateValues;
+            
+        if (firstChange) {
+            $elToChange = $elToChange.filter(':nth-child(' + firstChange + ')').nextAll();
+        } 
+    
+        animateValues = { 'top' : this.options.offset, 
+                          'opacity' : 0 
+                        };
+
+        function afterAnimate() {
+            $(this).remove();
+        }
+        
+        $elToChange.filter(':not(.' + this.options.elTransision + ')')
+                   .animate(animateValues, this.options.speed, afterAnimate);
     };
 
     /**
@@ -101,6 +113,8 @@
             });
         }
         this.$el.html($el);
+        // Save the length of the first element
+        this._elWidth = $($el[0]).width();
     };
 
     $.fn.xover = function(value, options) {
