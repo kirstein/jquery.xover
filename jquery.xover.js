@@ -35,9 +35,7 @@
     };
 
     Xover.prototype.manipulateEl = function() {
-        var root        = this,
-            firstChange = this.getFirstChangePos(),
-            $changeEls, $transisionEls, leftOffset;
+        var firstChange = this.getFirstChangePos();
 
         if (typeof firstChange !== 'undefined') {
 
@@ -104,7 +102,7 @@
 
     Xover.prototype.writeEl = function() {
         var text = $.trim(this.$el.text()),
-            $el  = $();
+            $el  = $(), i;
 
         for (i = 0; i < text.length; i += 1) {
             $el = $el.add('<span/>', {
@@ -118,9 +116,7 @@
     };
 
     $.fn.xover = function(value, options) {
-        var root = this;
-
-        if (typeof val === 'object' && typeof opt === 'undefined') {
+        if (typeof value === 'object' && typeof options === 'undefined') {
             options = value;
             value   = option.value;
         }
