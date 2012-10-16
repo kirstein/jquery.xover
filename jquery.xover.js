@@ -22,7 +22,7 @@
     Xover.prototype.writeTransformEl = function() {
         var firstChange = this.getFirstChangePos(),
             $wrap = $('<span />', {
-                'class' : this.options.elTransision
+                'class' : this.options.elTransition
             }), i;
 
         this.$el.append($wrap);
@@ -31,7 +31,7 @@
                 'class' : this.options.elClass,
                 'text'  : this.value[i]
             }).appendTo($wrap);
-        }                
+        }
     };
 
     Xover.prototype.manipulateEl = function() {
@@ -41,8 +41,8 @@
 
             this.animateOldItems();
             this.animateNewItems();
-            
-        } 
+
+        }
     };
 
     Xover.prototype.animateNewItems = function() {
@@ -52,42 +52,42 @@
             cssValues, animateValues;
 
         animateValues = { 'margin-top' : 0 };
-        cssValues = { 'margin-left': leftOffset, 
+        cssValues = { 'margin-left': leftOffset,
                       'margin-top' : '-' + this.options.offset,
-                      'display'    : 'visible'    
+                      'display'    : 'visible'
                     };
 
         function afterAnimate() {
-            $(this).removeClass(root.options.elTransision)
+            $(this).removeClass(root.options.elTransition)
                    .css({ 'margin-left' : 0 })
                    .children().unwrap();
         }
-        this.$el.children('span.' + this.options.elTransision).css(cssValues).animate(animateValues, this.options.speed, afterAnimate); 
+        this.$el.children('span.' + this.options.elTransition).css(cssValues).animate(animateValues, this.options.speed, afterAnimate);
     };
 
     Xover.prototype.animateOldItems = function() {
         var firstChange = this.getFirstChangePos(),
             $elToChange = this.$el.children('span.' + this.options.elClass),
             animateValues;
-            
+
         if (firstChange) {
             $elToChange = $elToChange.filter(':nth-child(' + firstChange + ')').nextAll();
-        } 
-    
-        animateValues = { 'top' : this.options.offset, 
-                          'opacity' : 0 
+        }
+
+        animateValues = { 'top' : this.options.offset,
+                          'opacity' : 0
                         };
 
         function afterAnimate() {
             $(this).remove();
         }
-        
-        $elToChange.filter(':not(.' + this.options.elTransision + ')')
+
+        $elToChange.filter(':not(.' + this.options.elTransition + ')')
                    .animate(animateValues, this.options.speed, afterAnimate);
     };
 
     /**
-     * Returns the first changed character in the comparson to old and new value.
+     * Returns the first changed character in the comparison to old and new value.
      */
     Xover.prototype.getFirstChangePos = function() {
          for (var i = 0; i < this.value.length; i += 1) {
@@ -106,7 +106,7 @@
 
         for (i = 0; i < text.length; i += 1) {
             $el = $el.add('<span/>', {
-                'class' : this.options.elClass,
+                'class' : tphis.options.elClass,
                 'text'  : text[i]
             });
         }
@@ -130,7 +130,7 @@
         value    : undefined,
         elClass  : 'xover-el',
         elChangeClass : 'xover-change',
-        elTransision : 'xover-transision',
+        elTransition : 'xover-transition',
         speed    : 'slow',
         offset   : '10px'
     };
