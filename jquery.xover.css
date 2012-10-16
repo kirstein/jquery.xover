@@ -1,6 +1,7 @@
-.xover-change {
-    position: absolute;
+.xover-transition {
+    position:absolute
 }
+
 .xover-el {
-    position: relative;
+    position:relative
 }
