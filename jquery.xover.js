@@ -1,3 +1,6 @@
+/**
+ * jQuery xover plugin v0.2
+ */
 (function($) {
 
     var Xover = function(el, value, options) {
@@ -11,22 +14,36 @@
             this.text    = $.trim(this.$el.text());
     };
 
+    /**
+     * Checks if the text is not the same as the value.
+     * If its not the same writes out the new elements listing and animates them.
+     */
     Xover.prototype.init = function() {
         if (this.text !== this.value) {
+            // Mark the position of the first change
+            this._changePos = this.getFirstChangePos();
+
             this.writeEl();
             this.writeTransformEl();
             this.manipulateEl();
         }
     };
 
+    /**
+     * Write temporary new values after the first changed value
+     * New values will be wrapped in span.
+     * Newly generated span will be appended to the element.
+     */
     Xover.prototype.writeTransformEl = function() {
-        var firstChange = this.getFirstChangePos(),
-            $wrap = $('<span />', {
+        var $wrap = $('<span />', {
                 'class' : this.options.elTransition
             }), i;
 
+        // Append the wrapper
         this.$el.append($wrap);
-        for (i = firstChange; i < this.value.length; i += 1) {
+
+        // Loop through all the changed values. Append them to the wrapper in order
+        for (i = this._changePos; i < this.value.length; i += 1) {
             $('<span/>', {
                 'class' : this.options.elClass,
                 'text'  : this.value[i]
@@ -34,10 +51,11 @@
         }
     };
 
+    /**
+     * Animate changes to page.
+     */
     Xover.prototype.manipulateEl = function() {
-        var firstChange = this.getFirstChangePos();
-
-        if (typeof firstChange !== 'undefined') {
+        if (this._changePos) {
 
             this.animateOldItems();
             this.animateNewItems();
@@ -45,9 +63,13 @@
         }
     };
 
+    /**
+     * Animate changed items to page.
+     * Will position the wrapper with elements on top of the elements needed to be changed.
+     * Animates the wrapper. After the animations have been done will unwrap the elements.
+     */
     Xover.prototype.animateNewItems = function() {
-        var firstChange = this.getFirstChangePos(),
-            leftOffset  = '-' + (this.text.length - firstChange) * this._elWidth + 'px',
+        var leftOffset  = '-' + (this.text.length - this._changePos) * this._elWidth + 'px',
             root        = this,
             cssValues, animateValues;
 
@@ -57,20 +79,30 @@
                       'display'    : 'visible'
                     };
 
+        // Animation callback.
+        // Moves the wrapper back and unwraps elements.
         function afterAnimate() {
-            $(this).removeClass(root.options.elTransition)
-                   .css({ 'margin-left' : 0 })
+            $(this).css({ 'margin-left' : 0 })
                    .children().unwrap();
         }
+
+        // Animation logic.
         this.$el.children('span.' + this.options.elTransition).css(cssValues).animate(animateValues, this.options.speed, afterAnimate);
     };
 
+    /**
+     * Animate changed elements.
+     * Will search for all elements after the changed element.
+     * Will animate all found elements and remove them at the end of the animation.
+     */
     Xover.prototype.animateOldItems = function() {
-        var firstChange = this.getFirstChangePos(),
-            $elToChange = this.$el.children('span.' + this.options.elClass),
+        // Selects all elements with target class.
+        var $elToChange = this.$el.children('span.' + this.options.elClass),
             animateValues;
 
-        if (firstChange) {
+        // Filters out all elements that come before change.
+        // Needed because if we don't have a change position we need to animate all elements in container.
+        if (this._changePos) {
             $elToChange = $elToChange.filter(':nth-child(' + firstChange + ')').nextAll();
         }
 
@@ -78,12 +110,14 @@
                           'opacity' : 0
                         };
 
+        // Animation callback.
+        // Removes old elements.
         function afterAnimate() {
             $(this).remove();
         }
 
-        $elToChange.filter(':not(.' + this.options.elTransition + ')')
-                   .animate(animateValues, this.options.speed, afterAnimate);
+        // Animates elements
+        $elToChange.animate(animateValues, this.options.speed, afterAnimate);
     };
 
     /**
@@ -100,6 +134,10 @@
          }
     };
 
+    /**
+     * Splits target selector to spans by each letter.
+     * Marks down element Width after writing out
+     */
     Xover.prototype.writeEl = function() {
         var text = $.trim(this.$el.text()),
             $el  = $(), i;
@@ -126,6 +164,9 @@
         });
     };
 
+    /**
+     * Default values
+     */
     $.fn.xover.options = {
         value    : undefined,
         elClass  : 'xover-el',
