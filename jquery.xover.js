@@ -55,13 +55,14 @@
      * Animate changes to page.
      */
     Xover.prototype.manipulateEl = function() {
-        if (this._changePos) {
+        if (typeof this._changePos !== 'undefined') {
 
             this.animateOldItems();
             this.animateNewItems();
 
         }
     };
+
 
     /**
      * Animate changed items to page.
@@ -74,7 +75,8 @@
             cssValues, animateValues;
 
         animateValues = { 'margin-top' : 0 };
-        cssValues = { 'margin-left': leftOffset,
+        cssValues = {
+                      'margin-left': leftOffset,
                       'margin-top' : '-' + this.options.offset,
                       'display'    : 'visible'
                     };
@@ -103,7 +105,7 @@
         // Filters out all elements that come before change.
         // Needed because if we don't have a change position we need to animate all elements in container.
         if (this._changePos) {
-            $elToChange = $elToChange.filter(':nth-child(' + firstChange + ')').nextAll();
+            $elToChange = $elToChange.filter(':nth-child(' + this._changePos + ')').nextAll();
         }
 
         animateValues = { 'top' : this.options.offset,
@@ -117,7 +119,7 @@
         }
 
         // Animates elements
-        $elToChange.animate(animateValues, this.options.speed, afterAnimate);
+        $elToChange.filter(':not(.' + this.options.elTransition + ')').animate(animateValues, this.options.speed, afterAnimate);
     };
 
     /**
