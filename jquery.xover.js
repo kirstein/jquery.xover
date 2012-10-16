@@ -106,7 +106,7 @@
 
         for (i = 0; i < text.length; i += 1) {
             $el = $el.add('<span/>', {
-                'class' : tphis.options.elClass,
+                'class' : this.options.elClass,
                 'text'  : text[i]
             });
         }
